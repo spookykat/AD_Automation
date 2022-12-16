@@ -1,6 +1,6 @@
-import info.domain as domain
+from info import domain
 
-interface = input()
+interface = input("Enter network interface. ")
 output = domain.getDomainControllers(interface)
 
 if not output[0]:

@@ -50,14 +50,9 @@ def getDomainControllers(interface):
     domain_controllers = re.findall(domain_controller_regex, domaincontrollers_unparsed)
     processes = []
     for domain_controller in domain_controllers:
-        with open('DC-names.txt', 'a') as f:
-            f.write(domain_controller[:-1] + '\n')
+        domain_controller_ip = subprocess.run(['dig', '+short',domain_controller[:-1]], capture_output=True).stdout.decode('utf-8')
+        with open('DCs.txt', 'a') as f:
+            f.write(domain_controller[:-1] + " " + domain_controller_ip + '\n')
         
-        p = subprocess.Popen(['dig', '+short',domain_controller[:-1]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        processes.append(p)
-    
-    for p in processes:
-        stdout, stderr = p.communicate()
-        with open('DC-ips', 'a') as f:
-            f.write(stdout.decode('utf-8'))
+
     return 1
