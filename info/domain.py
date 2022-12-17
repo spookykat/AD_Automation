@@ -55,4 +55,4 @@ def getDomainControllers(interface):
             f.write(domain_controller[:-1] + " " + domain_controller_ip + '\n')
         
 
-    return 1
+    return (1, '')
