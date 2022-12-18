@@ -30,12 +30,10 @@ def getDomainControllers(interface):
             dns_ip_parsed = re.sub(r'IP4\.DNS\[\d+\]:\s+', '', dns_ip)
             for domain in domains:
                 domain_parsed = re.sub(r'IP4\.DOMAIN\[\d+\]:\s+', '', domain)
-                print(domain_parsed)
                 p = subprocess.Popen(['nslookup', '-type=SRV', '_ldap._tcp.dc._msdcs.' + domain_parsed, dns_ip_parsed], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 processes.append(p)
                 
             for search in searches:
-                print(search)
                 searches_parsed = re.sub(r'IP4\.SEARCHES\[\d+\]:\s+', '', search)
                 p = subprocess.Popen(['nslookup', '-type=SRV', '_ldap._tcp.dc._msdcs.' + searches_parsed, dns_ip_parsed], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 processes.append(p)
@@ -45,12 +43,12 @@ def getDomainControllers(interface):
     for p in processes:
         stdout, stderr = p.communicate()
         domaincontrollers_unparsed += stdout.decode('utf-8')
-    print(domaincontrollers_unparsed)
 
     domain_controllers = re.findall(domain_controller_regex, domaincontrollers_unparsed)
     processes = []
     for domain_controller in domain_controllers:
         domain_controller_ip = subprocess.run(['dig', '+short',domain_controller[:-1]], capture_output=True).stdout.decode('utf-8')
+        print(f"Found {domain_controller[:-1]} at {domain_controller_ip}")
         with open('DCs.txt', 'a') as f:
             f.write(domain_controller[:-1] + " " + domain_controller_ip + '\n')
         
