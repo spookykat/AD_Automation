@@ -1,0 +1,16 @@
+nmap:
+  enabled: True
+  threads: 4
+  arguments: -sV
+  targets:
+    - 192.168.0.1/24
+    - 192.168.57.0/24
+masscan:
+  enabled: True
+  arguments: --rate 50 --top-ports 50
+  targets:
+    - 192.168.56.0/24
+
+SMB:
+  username: username
+  password: password
